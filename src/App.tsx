@@ -678,36 +678,39 @@ const FAQ = () => {
   const [openIndex, setOpenIndex] = useState<number | null>(null);
 
   const faqs = [
-    // ...
     {
       question: "What are Agent Skills?",
-      answer: "Agent Skills are deterministic instruction sets (usually in Markdown format) that turn Claude into a specialized expert for specific workflows. Unlike generic prompts, Skills define a strict context, specific task sequences, and required output formats to ensure consistent, production-grade results every time."
+      answer: "Agent Skills are specialized 'instruction manuals' that turn Claude into an expert for specific jobs. Instead of you typing long prompts every time, Skills allow Claude to automatically know exactly how to handle a task and what format you need, ensuring professional results with zero effort."
     },
     {
       question: "How do I install a skill to Claude?",
-      answer: "To 'install' a skill, you can simply paste the content of the .md file into a new Claude conversation to set the context. For a more permanent setup using Claude Desktop, you can create a dedicated 'skills' directory on your machine and instruct Claude to reference these files as its primary operating manual for specific tasks."
+      answer: "Installing is as simple as a few clicks. In the Claude interface, you can add a skill by dragging in a file or selecting it from a list. Claude instantly 'learns' these new abilities, so you don't have to copy-paste instructions ever again."
     },
     {
       question: "How do I add connectors to Claude?",
-      answer: "Connectors in Claude are implemented via the Model Context Protocol (MCP). You add them by editing your 'claude_desktop_config.json' file. This configuration tells Claude Desktop which MCP servers to run (e.g., for Gmail, Jira, or Google Calendar), providing the AI with secure, real-time access to your external data and tools."
+      answer: "Connectors are added directly through the Claude UI. You simply find the tool you want to use—like Google Drive, Slack, or GitHub—and click to connect. Once authorized, Claude can instantly read your data and perform tasks across those apps without any coding required."
     },
     {
       question: "How do I add applications to GPT?",
-      answer: "In ChatGPT, you add 'Applications' (known as Actions) through the GPT Editor. Under the 'Configure' tab, you click 'Create new action' and provide an OpenAPI specification. This spec defines the API endpoints, authentication methods, and parameters that the GPT can use to interact with your external software services."
+      answer: "Adding applications to a GPT is a 'point-and-click' process within the GPT Editor. You simply select the service you want to link, and the system handles the bridge. This allows your GPT to interact with external software just like a human would, but much faster."
     },
     {
-      question: "What is the difference between 'Apps' in GPT and 'Connectors' in Claude?",
-      answer: "Fundamentally, there is no difference in purpose—they are the same concept under different names. Both serve as the 'hands' of the AI, allowing it to move beyond text generation and perform real actions like sending emails, updating tickets, or querying databases. While the technical implementation differs (OpenAPI for GPTs vs. MCP for Claude), the functional outcome is identical: bridging the gap between reasoning and execution."
+      question: "What is the difference between 'Applications' in GPT and 'Connectors' in Claude?",
+      answer: "They are essentially the same thing: easy-to-use bridges that give the AI 'hands.' Whether you are using a Connector in Claude or an Application in GPT, the goal is to let the AI perform real-world actions like sending emails or updating spreadsheets with a single click."
     },
     {
       question: "How do I use Claude Desktop?",
-      answer: "Claude Desktop is the power-user version of Claude that runs locally on your Mac or PC. Its primary advantage is its ability to integrate with your local environment and external tools via MCP. By configuring MCP servers, you can give Claude the ability to read your local codebase, query your databases, and interact with your enterprise SaaS applications directly from the desktop interface."
+      answer: "Claude Desktop is a dedicated app for your computer that makes it even easier to stay productive. It features a simple dashboard where you can manage all your skills and connectors in one place, letting Claude help you with your files and apps directly from your desktop."
     },
     {
       question: "What are Custom GPTs?",
-      answer: "Custom GPTs are personalized versions of ChatGPT that combine custom instructions, uploaded knowledge files, and API actions. They allow you to create a 'mini-app' within ChatGPT that is pre-configured with the specific expertise and toolsets required for a recurring business function."
+      answer: "Custom GPTs are personalized versions of ChatGPT built for specific tasks. They combine your instructions with easy-to-add applications, letting you create a powerful, automated assistant for your business without writing a single line of code."
+    },
+    {
+      question: "What is an MD file?",
+      answer: "An MD (Markdown) file is just a simple text file. Think of it like a .txt file that allows for basic formatting like bold text and lists. It's the standard way to give clear, organized instructions to an AI."
     }
-  ];
+];
 
   return (
     <>
