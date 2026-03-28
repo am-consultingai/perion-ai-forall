@@ -65,6 +65,20 @@ const Header = () => {
     { href: "#downloads", label: "Downloads" },
   ];
 
+  const handleNavClick = (e: React.MouseEvent<HTMLAnchorElement>, href: string) => {
+    e.preventDefault();
+    setIsMenuOpen(false);
+    
+    // Small delay to allow menu to start closing and ensure smooth transition
+    setTimeout(() => {
+      const targetId = href.substring(1);
+      const element = document.getElementById(targetId);
+      if (element) {
+        element.scrollIntoView({ behavior: 'smooth' });
+      }
+    }, 100);
+  };
+
   return (
     <header className="sticky top-0 z-50 w-full border-b border-perion-navy/10 bg-clean-slate/80 backdrop-blur-md">
       <div className="container mx-auto px-6 h-20 flex items-center justify-between">
@@ -83,6 +97,7 @@ const Header = () => {
             <a 
               key={link.href}
               href={link.href}
+              onClick={(e) => handleNavClick(e, link.href)}
               className="px-6 py-2 rounded-full text-sm font-bold transition-all text-perion-navy/60 hover:text-perion-navy hover:bg-perion-navy/5"
             >
               {link.label}
@@ -112,14 +127,14 @@ const Header = () => {
             initial={{ opacity: 0, height: 0 }}
             animate={{ opacity: 1, height: 'auto' }}
             exit={{ opacity: 0, height: 0 }}
-            className="lg:hidden border-t border-perion-navy/10 bg-white overflow-hidden"
+            className="lg:hidden absolute top-full left-0 w-full border-b border-perion-navy/10 bg-white shadow-xl overflow-hidden"
           >
             <nav className="flex flex-col p-4 sm:p-6 gap-1">
               {navLinks.map((link) => (
                 <a 
                   key={link.href}
                   href={link.href}
-                  onClick={() => setIsMenuOpen(false)}
+                  onClick={(e) => handleNavClick(e, link.href)}
                   className="text-base sm:text-lg font-bold text-perion-navy/60 hover:text-perion-navy transition-all py-4 px-6 rounded-2xl hover:bg-perion-navy/5 active:bg-perion-navy/10 flex items-center justify-between group"
                 >
                   {link.label}
@@ -198,14 +213,14 @@ const FoundationCardItem = ({ card, index }: { card: FoundationCard, index: numb
 
 const FoundationSection = () => {
   return (
-    <>
+    <div id="foundations" className="scroll-mt-20">
       <SectionBridge>
         Start here: The sections below explain concepts you’ll see again in the Day 2 pipeline and in the skill files you download. 
         Skim the cards first, then grab the files that match your role.
         <br />
         <span className="text-perion-navy/40 text-sm font-bold mt-2 block">Unsure where to begin? Read the four Day 1 cards in order—they mirror how we designed the workshop.</span>
       </SectionBridge>
-      <section id="foundations" className="py-32 container mx-auto px-6 scroll-mt-20">
+      <section className="py-32 container mx-auto px-6">
       <div className="mb-24 text-center">
         <h2 className="font-display font-black text-4xl md:text-6xl tracking-tight mb-8 uppercase">
           Day 1 — <br /> Foundations and tools
@@ -223,7 +238,7 @@ const FoundationSection = () => {
         ))}
       </div>
     </section>
-    </>
+    </div>
   );
 };
 
@@ -258,14 +273,14 @@ const PipelineSection = ({ onResourceClick }: { onResourceClick: (resource: any)
   };
 
   return (
-    <>
+    <div id="pipeline" className="scroll-mt-20">
       <SectionBridge>
         Day 2 — From one skill to a team of agents: Day 1 showed how models connect to tools and how instructions become Skills. 
         Day 2 shows orchestration: one trigger (the kickoff), several domain skills running in sequence, each producing artifacts—closer to how work actually flows across functions.
         <br />
         <span className="text-perion-navy/40 text-sm font-bold mt-2 block">What changes when more than one “expert” has to act on the same initiative? That’s what the pipeline demonstrates.</span>
       </SectionBridge>
-      <section id="pipeline" className="py-24 container mx-auto px-6 scroll-mt-20">
+      <section className="py-24 container mx-auto px-6">
       {/* Day 2 Header */}
       <div className="mb-16 flex flex-col md:flex-row md:items-center justify-between gap-8">
         <div>
@@ -537,17 +552,17 @@ const PipelineSection = ({ onResourceClick }: { onResourceClick: (resource: any)
         ))}
       </div>
     </section>
-    </>
+    </div>
   );
 };
 
 const HowToCreateSkills = ({ onResourceClick }: { onResourceClick: (resource: any) => void }) => (
-  <>
+  <div id="create-skill" className="scroll-mt-20">
     <SectionBridge>
       From assistants to repeatable workflows: Custom GPTs specialize the chat; Skills specialize the work so the same steps run the same way in Claude projects. 
       The steps below are how we turn a recurring task into a skill file—the same pattern we use for the Day 2 agents.
     </SectionBridge>
-    <section id="create-skill" className="py-24 bg-perion-navy text-white overflow-hidden relative scroll-mt-20">
+    <section className="py-24 bg-perion-navy text-white overflow-hidden relative">
       <div className="absolute top-0 left-0 w-full h-full opacity-5 pointer-events-none">
         <div className="absolute top-10 left-10 rotate-12"><Zap size={300} /></div>
         <div className="absolute bottom-10 right-10 -rotate-12"><Code2 size={300} /></div>
@@ -618,7 +633,7 @@ const HowToCreateSkills = ({ onResourceClick }: { onResourceClick: (resource: an
       </div>
     </div>
   </section>
-  </>
+  </div>
 );
 
 const ExecutiveSummary = () => (
@@ -678,47 +693,44 @@ const FAQ = () => {
   const [openIndex, setOpenIndex] = useState<number | null>(null);
 
   const faqs = [
+    // ...
     {
       question: "What are Agent Skills?",
-      answer: "Agent Skills are specialized 'instruction manuals' that turn Claude into an expert for specific jobs. Instead of you typing long prompts every time, Skills allow Claude to automatically know exactly how to handle a task and what format you need, ensuring professional results with zero effort."
+      answer: "Agent Skills are deterministic instruction sets (usually in Markdown format) that turn Claude into a specialized expert for specific workflows. Unlike generic prompts, Skills define a strict context, specific task sequences, and required output formats to ensure consistent, production-grade results every time."
     },
     {
       question: "How do I install a skill to Claude?",
-      answer: "Installing is as simple as a few clicks. In the Claude interface, you can add a skill by dragging in a file or selecting it from a list. Claude instantly 'learns' these new abilities, so you don't have to copy-paste instructions ever again."
+      answer: "To 'install' a skill, you can simply paste the content of the .md file into a new Claude conversation to set the context. For a more permanent setup using Claude Desktop, you can create a dedicated 'skills' directory on your machine and instruct Claude to reference these files as its primary operating manual for specific tasks."
     },
     {
       question: "How do I add connectors to Claude?",
-      answer: "Connectors are added directly through the Claude UI. You simply find the tool you want to use—like Google Drive, Slack, or GitHub—and click to connect. Once authorized, Claude can instantly read your data and perform tasks across those apps without any coding required."
+      answer: "Connectors in Claude are implemented via the Model Context Protocol (MCP). You add them by editing your 'claude_desktop_config.json' file. This configuration tells Claude Desktop which MCP servers to run (e.g., for Gmail, Jira, or Google Calendar), providing the AI with secure, real-time access to your external data and tools."
     },
     {
       question: "How do I add applications to GPT?",
-      answer: "Adding applications to a GPT is a 'point-and-click' process within the GPT Editor. You simply select the service you want to link, and the system handles the bridge. This allows your GPT to interact with external software just like a human would, but much faster."
+      answer: "In ChatGPT, you add 'Applications' (known as Actions) through the GPT Editor. Under the 'Configure' tab, you click 'Create new action' and provide an OpenAPI specification. This spec defines the API endpoints, authentication methods, and parameters that the GPT can use to interact with your external software services."
     },
     {
-      question: "What is the difference between 'Applications' in GPT and 'Connectors' in Claude?",
-      answer: "They are essentially the same thing: easy-to-use bridges that give the AI 'hands.' Whether you are using a Connector in Claude or an Application in GPT, the goal is to let the AI perform real-world actions like sending emails or updating spreadsheets with a single click."
+      question: "What is the difference between 'Apps' in GPT and 'Connectors' in Claude?",
+      answer: "Fundamentally, there is no difference in purpose—they are the same concept under different names. Both serve as the 'hands' of the AI, allowing it to move beyond text generation and perform real actions like sending emails, updating tickets, or querying databases. While the technical implementation differs (OpenAPI for GPTs vs. MCP for Claude), the functional outcome is identical: bridging the gap between reasoning and execution."
     },
     {
       question: "How do I use Claude Desktop?",
-      answer: "Claude Desktop is a dedicated app for your computer that makes it even easier to stay productive. It features a simple dashboard where you can manage all your skills and connectors in one place, letting Claude help you with your files and apps directly from your desktop."
+      answer: "Claude Desktop is the power-user version of Claude that runs locally on your Mac or PC. Its primary advantage is its ability to integrate with your local environment and external tools via MCP. By configuring MCP servers, you can give Claude the ability to read your local codebase, query your databases, and interact with your enterprise SaaS applications directly from the desktop interface."
     },
     {
       question: "What are Custom GPTs?",
-      answer: "Custom GPTs are personalized versions of ChatGPT built for specific tasks. They combine your instructions with easy-to-add applications, letting you create a powerful, automated assistant for your business without writing a single line of code."
-    },
-    {
-      question: "What is an MD file?",
-      answer: "An MD (Markdown) file is just a simple text file. Think of it like a .txt file that allows for basic formatting like bold text and lists. It's the standard way to give clear, organized instructions to an AI."
+      answer: "Custom GPTs are personalized versions of ChatGPT that combine custom instructions, uploaded knowledge files, and API actions. They allow you to create a 'mini-app' within ChatGPT that is pre-configured with the specific expertise and toolsets required for a recurring business function."
     }
-];
+  ];
 
   return (
-    <>
+    <div id="faq" className="scroll-mt-20">
       <SectionBridge>
         Common questions below match what we heard in the room—installing skills, connectors vs apps, Desktop vs web. 
         If you’re ready to implement, jump to the Download Center for the agent skills and slides.
       </SectionBridge>
-      <section id="faq" className="py-32 bg-white scroll-mt-20 border-b border-perion-navy/5">
+      <section className="py-32 bg-white border-b border-perion-navy/5">
       <div className="container mx-auto px-6">
         <div className="max-w-3xl mx-auto">
           <h2 className="font-display font-black text-3xl md:text-5xl tracking-tight mb-12 uppercase text-center">FAQ</h2>
@@ -752,7 +764,7 @@ const FAQ = () => {
         </div>
       </div>
     </section>
-    </>
+    </div>
   );
 };
 
@@ -801,11 +813,11 @@ const DownloadCenter = () => {
   ];
 
   return (
-    <>
+    <div id="downloads" className="scroll-mt-20">
       <SectionBridge>
         Put it into practice: Use the same skill files referenced in the pipeline and the Day 1 / Day 2 decks to walk through the flow with your team.
       </SectionBridge>
-      <section id="downloads" className="py-32 container mx-auto px-6 scroll-mt-20">
+      <section className="py-32 container mx-auto px-6">
       <div className="max-w-4xl mx-auto text-center mb-20">
         <h2 className="font-display font-black text-4xl md:text-6xl tracking-tight mb-8 uppercase">Download Center</h2>
         <div className="bg-white/40 backdrop-blur-sm p-8 rounded-3xl border border-perion-navy/5 max-w-3xl mx-auto shadow-sm">
@@ -856,7 +868,7 @@ const DownloadCenter = () => {
         ))}
       </div>
     </section>
-    </>
+    </div>
   );
 };
 
